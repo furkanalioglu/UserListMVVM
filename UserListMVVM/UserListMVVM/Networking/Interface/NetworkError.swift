@@ -20,6 +20,7 @@ enum NetworkError: LocalizedError {
     case encodingFailed
     case unknown
     case underlying(Error)
+    case selfDeallocated
     
     var errorDescription: String? {
         switch self {
@@ -47,6 +48,8 @@ enum NetworkError: LocalizedError {
             return "Unknown error"
         case .underlying(let error):
             return "Network error: \(error.localizedDescription)"
+        case .selfDeallocated:
+            return "Self deallocated"
         }
     }
 }

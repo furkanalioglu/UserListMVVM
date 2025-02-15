@@ -27,7 +27,7 @@ class Router<EndPoint: EndPointType>: NetworkRouter {
     func request(_ route: EndPoint) -> AnyPublisher<Data, NetworkError> {
         return Future<URLRequest, NetworkError> { [weak self] promise in
             guard let self = self else {
-                promise(.failure(.unknown))
+                promise(.failure(.selfDeallocated))
                 return
             }
             
@@ -41,7 +41,7 @@ class Router<EndPoint: EndPointType>: NetworkRouter {
         }
         .receive(on: networkQueue)
         .flatMap { [weak self] request -> AnyPublisher<(data: Data, response: URLResponse), NetworkError> in
-            guard let self = self else { return Fail(error: NetworkError.unknown).eraseToAnyPublisher() }
+            guard let self = self else { return Fail(error: NetworkError.selfDeallocated).eraseToAnyPublisher() }
             
             return self.session.dataTaskPublisher(for: request)
                 .mapError { NetworkError.underlying($0) }
