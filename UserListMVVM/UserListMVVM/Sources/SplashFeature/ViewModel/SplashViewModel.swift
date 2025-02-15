@@ -11,7 +11,6 @@ import Combine
 final class SplashViewModel: SplashViewModelProtocol {
     // MARK: - Protocol Properties
     private(set) var viewState: CurrentValueSubject<SplashViewState, Never>
-    weak var delegate: SplashViewModelDelegate?
     
     // MARK: - Private Properties
     private var disposeBag = Set<AnyCancellable>()

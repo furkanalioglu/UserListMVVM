@@ -10,7 +10,6 @@ import Combine
 
 final class UserDetailViewModel: UserDetailViewModelProtocol {
     private(set) var user: User
-    weak var delegate: UserDetailViewModelDelegate?
     
     var state: AnyPublisher<UserDetailViewState, Never> {
         stateSubject.eraseToAnyPublisher()
@@ -28,36 +27,13 @@ final class UserDetailViewModel: UserDetailViewModelProtocol {
         var sections: [UserDetailSection] = []
         
         // Header Section
-        let headerViewModel = UserDetailHeaderCellViewModel(
-            name: user.name ?? "",
-            username: user.username ?? ""
-        )
-        sections.append(.header(headerViewModel))
-        
+        sections.append(.header(UserDetailHeaderCellViewModel(user: user)))
         // Contact Section
-        let contactViewModels = [
-            UserDetailInfoCellViewModel(title: "Email", value: user.email ?? ""),
-            UserDetailInfoCellViewModel(title: "Phone", value: user.phone ?? ""),
-            UserDetailInfoCellViewModel(title: "Website", value: user.website ?? "")
-        ]
-        sections.append(.contact(contactViewModels))
-        
+        sections.append(.contact(UserDetailInfoCellViewModel.createContactInfo(from: user)))
         // Address Section
-        let addressViewModels = [
-            UserDetailInfoCellViewModel(title: "Street", value: user.address?.street ?? ""),
-            UserDetailInfoCellViewModel(title: "Suite", value: user.address?.suite ?? ""),
-            UserDetailInfoCellViewModel(title: "City", value: user.address?.city ?? ""),
-            UserDetailInfoCellViewModel(title: "Zipcode", value: user.address?.zipcode ?? "")
-        ]
-        sections.append(.address(addressViewModels))
-        
+        sections.append(.address(UserDetailInfoCellViewModel.createAddressInfo(from: user.address)))
         // Company Section
-        let companyViewModels = [
-            UserDetailInfoCellViewModel(title: "Name", value: user.company?.name ?? ""),
-            UserDetailInfoCellViewModel(title: "Catch Phrase", value: user.company?.catchPhrase ?? ""),
-            UserDetailInfoCellViewModel(title: "BS", value: user.company?.bs ?? "")
-        ]
-        sections.append(.company(companyViewModels))
+        sections.append(.company(UserDetailInfoCellViewModel.createCompanyInfo(from: user.company)))
         
         stateSubject.send(.loaded(sections))
     }

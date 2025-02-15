@@ -37,9 +37,7 @@ final class UserListViewModel: UserListViewModelProtocol {
     private func setupInitialState() {
         let viewModels = users.map { user in
             UserListTableCellViewModel(
-                id: user.id,
-                name: user.name,
-                email: user.email
+                user: user
             )
         }
         stateSubject.send(.loaded(viewModels))

@@ -46,10 +46,10 @@ final class UserDetailInfoCell: NiblessTableViewCell {
         mainVerticalStackView.addArrangedSubview(valueLabel)
         
         NSLayoutConstraint.activate([
-            mainVerticalStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
+            mainVerticalStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0),
             mainVerticalStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             mainVerticalStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            mainVerticalStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)
+            mainVerticalStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0)
         ])
     }
     

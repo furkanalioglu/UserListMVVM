@@ -9,12 +9,9 @@ import Foundation
 import Foundation
 import Combine
 
-protocol SplashViewModelDelegate: AnyObject {}
-
 protocol SplashViewModelProtocol {
   // MARK: - Output
   var viewState: CurrentValueSubject<SplashViewState, Never> { get }
-  var delegate: SplashViewModelDelegate? { get set }
   
   // MARK: - Input
   func tryAgainAction()

@@ -12,15 +12,12 @@ protocol UserDetailViewModelDelegate: AnyObject {}
 
 protocol UserDetailViewModelProtocol {
     var user: User { get }
-    var delegate: UserDetailViewModelDelegate? { get set }
     var state: AnyPublisher<UserDetailViewState, Never> { get }
 }
 
 enum UserDetailViewState {
     case initial
-    case loading
     case loaded([UserDetailSection])
-    case error
 }
 
 enum UserDetailSection: Hashable {
@@ -37,19 +34,6 @@ enum UserDetailSection: Hashable {
         case .company: return "Company"
         }
     }
-}
-
-struct UserDetailHeaderCellViewModel: Hashable {
-    let id = UUID()
-    let name: String
-    let username: String
-    
-}
-
-struct UserDetailInfoCellViewModel: Hashable {
-    let id = UUID()
-    let title: String
-    let value: String
 }
 
 enum UserDetailCellViewModel: Hashable {

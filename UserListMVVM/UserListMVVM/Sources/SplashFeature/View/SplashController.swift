@@ -8,7 +8,7 @@
 import UIKit
 import Combine
 
-final class SplashController: NiblessViewController, SplashViewModelDelegate {
+final class SplashController: NiblessViewController {
     // MARK: - Properties
     private let viewModel: SplashViewModelProtocol
     private let alertPresenter: AlertPresenting

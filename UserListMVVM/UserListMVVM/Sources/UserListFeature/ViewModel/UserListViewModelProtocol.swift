@@ -27,12 +27,6 @@ enum UserListViewState {
     case error
 }
 
-struct UserListTableCellViewModel: Hashable {
-    let id: Int?
-    let name: String?
-    let email: String?
-}
-
 enum UserListSection: Hashable {
     case main
 }
