@@ -15,6 +15,7 @@ final class UserListController: NiblessViewController {
     
     private var cancellables = Set<AnyCancellable>()
     
+    // MARK: - Lifecycle
     init(viewModel: UserListViewModelProtocol) {
         self.viewModel = viewModel
         super.init()
@@ -36,6 +37,7 @@ final class UserListController: NiblessViewController {
         self.viewModel.viewDidAppear()
     }
     
+    // MARK: - Methods
     private func setupNavigationBar() {
         title = "Users"
         self.navigationController?.navigationBar.prefersLargeTitles = true

@@ -17,7 +17,7 @@ final class SplashViewModel: SplashViewModelProtocol {
     private let appRoot: CurrentValueSubject<Roots, Never>
     private let service: UserServiceProtocol
     
-    // MARK: - Initializers
+    // MARK: - Lifecycle
     init(appRoot: CurrentValueSubject<Roots, Never>,
          service: UserServiceProtocol = UserService()) {
         self.appRoot = appRoot

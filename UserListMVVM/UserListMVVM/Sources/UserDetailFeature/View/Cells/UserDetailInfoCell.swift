@@ -8,6 +8,7 @@
 import UIKit
 
 final class UserDetailInfoCell: NiblessTableViewCell {
+    // MARK: - Properties
     private lazy var mainVerticalStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
@@ -32,6 +33,7 @@ final class UserDetailInfoCell: NiblessTableViewCell {
         return label
     }()
     
+    // MARK: - Lifecycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
@@ -43,6 +45,7 @@ final class UserDetailInfoCell: NiblessTableViewCell {
         valueLabel.text = nil
     }
     
+    // MARK: - Methods
     private func setupUI() {
         selectionStyle = .none
         backgroundColor = .clear

@@ -9,6 +9,7 @@ import UIKit
 import Combine
 
 final class UserDetailRootView: NiblessView {
+    // MARK: - Properties
     private let viewModel: UserDetailViewModelProtocol
     private var cancellables = Set<AnyCancellable>()
     
@@ -25,6 +26,7 @@ final class UserDetailRootView: NiblessView {
     typealias DataSource = UITableViewDiffableDataSource<UserDetailSection, UserDetailCellViewModel>
     typealias Snapshot = NSDiffableDataSourceSnapshot<UserDetailSection, UserDetailCellViewModel>
     
+    // MARK: - Lifecycle
     init(viewModel: UserDetailViewModelProtocol) {
         self.viewModel = viewModel
         super.init(frame: .zero)
@@ -33,6 +35,7 @@ final class UserDetailRootView: NiblessView {
         setupBindings()
     }
     
+    // MARK: - Methods
     private func setupViews() {
         backgroundColor = .systemGroupedBackground
         

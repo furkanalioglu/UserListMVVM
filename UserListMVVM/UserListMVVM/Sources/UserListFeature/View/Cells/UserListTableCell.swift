@@ -9,6 +9,7 @@ import UIKit
 
 final class UserListTableCell: NiblessTableViewCell {
     
+    // MARK: - Properties
     private lazy var mainVerticalStack: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
@@ -33,17 +34,19 @@ final class UserListTableCell: NiblessTableViewCell {
         return label
     }()
     
+    // MARK: - Lifecycle
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupUI()
+    }
+    
     override func prepareForReuse() {
         super.prepareForReuse()
         nameLabel.text = nil
         emailLabel.text = nil
     }
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        setupUI()
-    }
-    
+    // MARK: - Methods
     private func setupUI() {
         selectionStyle = .none        
         contentView.addSubview(mainVerticalStack)

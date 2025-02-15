@@ -10,6 +10,7 @@ import Combine
 
 final class SplashRootView: NiblessView {
     
+    // MARK: - Properties
     private let viewModel: SplashViewModelProtocol
     private var disposeBag = Set<AnyCancellable>()
     
@@ -62,6 +63,7 @@ final class SplashRootView: NiblessView {
         return activityIndicator
     }()
     
+    // MARK: - Lifecycle
     init(viewModel: SplashViewModelProtocol) {
         self.viewModel = viewModel
         super.init(frame: .zero)
@@ -69,6 +71,7 @@ final class SplashRootView: NiblessView {
         constructHierarchy()
     }
     
+    // MARK: - Methods
     private func setupViews() {
         mainHorizontalStackView.translatesAutoresizingMaskIntoConstraints = false
         appLogoImageView.translatesAutoresizingMaskIntoConstraints = false

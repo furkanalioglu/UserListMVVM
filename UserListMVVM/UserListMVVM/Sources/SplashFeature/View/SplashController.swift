@@ -15,6 +15,7 @@ final class SplashController: NiblessViewController {
     private var rootView: SplashRootView!
     private var disposeBag = Set<AnyCancellable>()
     
+    // MARK: - Lifecycle
     init(viewModel: SplashViewModelProtocol, 
          alertPresenter: AlertPresenting = AlertPresenter()) {
         self.viewModel = viewModel
@@ -27,7 +28,6 @@ final class SplashController: NiblessViewController {
         view = rootView
     }
     
-    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setupNavigationBar()

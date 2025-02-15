@@ -9,7 +9,9 @@ import UIKit
 import Combine
 
 final class UserListRootView: NiblessView {
+    // MARK: - Properties
     private let viewModel: UserListViewModelProtocol
+    private var cancellables = Set<AnyCancellable>()
     
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
@@ -33,8 +35,7 @@ final class UserListRootView: NiblessView {
     typealias DataSource = UITableViewDiffableDataSource<UserListSection, UserListTableCellViewModel>
     typealias Snapshot = NSDiffableDataSourceSnapshot<UserListSection, UserListTableCellViewModel>
     
-    private var cancellables = Set<AnyCancellable>()
-    
+    // MARK: - Lifecycle
     init(viewModel: UserListViewModelProtocol) {
         self.viewModel = viewModel
         super.init(frame: .zero)
@@ -44,6 +45,7 @@ final class UserListRootView: NiblessView {
         setupBindings()
     }
     
+    // MARK: - Methods
     private func setupViews() {
         backgroundColor = .systemBackground
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -109,6 +111,7 @@ final class UserListRootView: NiblessView {
     }
 }
 
+// MARK: - UITableViewDelegate
 extension UserListRootView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         viewModel.didSelectRow(at: indexPath)

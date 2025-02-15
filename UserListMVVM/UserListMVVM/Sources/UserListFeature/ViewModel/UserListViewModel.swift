@@ -27,6 +27,7 @@ final class UserListViewModel: UserListViewModelProtocol {
     private var cancellables = Set<AnyCancellable>()
     private var isFirstAppear: Bool = true
     
+    // MARK: - Lifecycle
     init(appRoot: CurrentValueSubject<Roots, Never>,
          users: [User]) {
         self.appRoot = appRoot
@@ -34,6 +35,7 @@ final class UserListViewModel: UserListViewModelProtocol {
         setupInitialState()
     }
     
+    // MARK: - Methods
     private func setupInitialState() {
         let viewModels = users.map { user in
             UserListTableCellViewModel(

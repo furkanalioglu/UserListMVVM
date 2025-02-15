@@ -9,20 +9,24 @@ import Foundation
 import Combine
 
 final class UserDetailViewModel: UserDetailViewModelProtocol {
+    // MARK: - Protocol Properties
     private(set) var user: User
     
     var state: AnyPublisher<UserDetailViewState, Never> {
         stateSubject.eraseToAnyPublisher()
     }
     
+    // MARK: - Private Properties
     private let stateSubject = CurrentValueSubject<UserDetailViewState, Never>(.initial)
     private var cancellables = Set<AnyCancellable>()
     
+    // MARK: - Lifecycle
     init(user: User) {
         self.user = user
         setupInitialState()
     }
     
+    // MARK: - Methods
     private func setupInitialState() {
         var sections: [UserDetailSection] = []
         
