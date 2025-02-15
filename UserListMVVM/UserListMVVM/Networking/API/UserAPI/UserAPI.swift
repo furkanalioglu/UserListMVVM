@@ -11,14 +11,7 @@ enum UserAPI {
     case fetchUsers
 }
 
-extension UserAPI: EndPointType {
-    var baseURL: URL {
-        guard let url = URL(string: "https://jsonplaceholder.typicode.com") else {
-            fatalError("baseURL could not be configured.")
-        }
-        return url
-    }
-    
+extension UserAPI: EndPointType {    
     var path: String {
         switch self {
         case .fetchUsers:

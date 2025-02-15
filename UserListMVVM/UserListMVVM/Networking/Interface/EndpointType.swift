@@ -13,3 +13,13 @@ internal protocol EndPointType: Sendable {
     var httpMethod: HTTPMethod { get }
     var task: HTTPTask { get }
 }
+
+extension EndPointType {
+    var baseURL: URL {
+        let urlString = BuildConfiguration().value(for: .baseURL)
+        guard let url = URL(string: "https://" + urlString) else {
+            fatalError("baseURL could not be configured.")
+        }
+        return url
+    }
+}
