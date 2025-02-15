@@ -27,7 +27,7 @@ final class UserDetailController: NiblessViewController, UserDetailViewModelDele
     }
     
     private func setupNavigationBar() {
-        title = "User Details"
+        title = "\(viewModel.user.name ?? "")"
         navigationItem.largeTitleDisplayMode = .never
     }
 } 

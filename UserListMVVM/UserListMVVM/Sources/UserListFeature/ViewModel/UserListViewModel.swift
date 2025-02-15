@@ -15,6 +15,7 @@ final class UserListViewModel: UserListViewModelProtocol {
     internal var state: AnyPublisher<UserListViewState, Never> {
         stateSubject.eraseToAnyPublisher()
     }
+    
     internal var destination: AnyPublisher<UserListDestinations?, Never> {
         destinationSubject.eraseToAnyPublisher()
     }

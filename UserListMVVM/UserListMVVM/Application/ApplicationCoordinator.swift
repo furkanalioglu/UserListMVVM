@@ -13,7 +13,7 @@ protocol Coordinator: AnyObject {
 }
 
 enum Roots: Hashable {
-    // Since we are pass them in dictionary in childCoordinators, we need to conform to Hashable
+    // Since we pass them in dictionary in childCoordinators, we need to conform to Hashable
     case splash
     case userList([User])
     

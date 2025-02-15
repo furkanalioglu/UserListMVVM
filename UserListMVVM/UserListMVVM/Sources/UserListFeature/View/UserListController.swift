@@ -47,8 +47,8 @@ final class UserListController: NiblessViewController {
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] destination in
-                debugPrint("Destination is \(destination)")
-                self?.handleDestination(destination)
+                guard let self else { return }
+                self.handleDestination(destination)
             }
             .store(in: &cancellables)
     }
