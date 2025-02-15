@@ -29,6 +29,6 @@ final class UserListController: NiblessViewController, UserListViewModelDelegate
     
     private func setupNavigationBar() {
         title = "Users"
-        navigationController?.setNavigationBarHidden(false, animated: true)
+        self.navigationController?.navigationBar.prefersLargeTitles = true
     }
 }

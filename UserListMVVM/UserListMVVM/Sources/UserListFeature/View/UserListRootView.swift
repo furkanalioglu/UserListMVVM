@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 final class UserListRootView: NiblessView {
     private let viewModel: UserListViewModelProtocol
@@ -21,38 +22,88 @@ final class UserListRootView: NiblessView {
         return tableView
     }()
     
+    private lazy var loadingIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .large)
+        indicator.hidesWhenStopped = true
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        return indicator
+    }()
+    
     private var dataSource: DataSource?
     typealias DataSource = UITableViewDiffableDataSource<UserListSection, UserListTableCellViewModel>
     typealias Snapshot = NSDiffableDataSourceSnapshot<UserListSection, UserListTableCellViewModel>
-
+    
+    private var cancellables = Set<AnyCancellable>()
+    
     init(viewModel: UserListViewModelProtocol) {
         self.viewModel = viewModel
         super.init(frame: .zero)
         setupViews()
         constructHierarchy()
         setupDataSource()
+        setupBindings()
     }
     
     private func setupViews() {
-        self.tableView.translatesAutoresizingMaskIntoConstraints = false
-        self.addSubview(self.tableView)
+        backgroundColor = .systemBackground
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(tableView)
+        addSubview(loadingIndicator)
     }
     
     private func constructHierarchy() {
         NSLayoutConstraint.activate([
-            self.tableView.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor),
-            self.tableView.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor),
-            self.tableView.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor),
-            self.tableView.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor)
+            tableView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+            
+            loadingIndicator.centerXAnchor.constraint(equalTo: centerXAnchor),
+            loadingIndicator.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
+    }
+    
+    private func setupBindings() {
+        viewModel.state
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] state in
+                self?.handleState(state)
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func handleState(_ state: UserListViewState) {
+        switch state {
+        case .initial:
+            tableView.isHidden = true
+            loadingIndicator.stopAnimating()
+        case .loading:
+            tableView.isHidden = true
+            loadingIndicator.startAnimating()
+        case .loaded(let viewModels):
+            tableView.isHidden = false
+            loadingIndicator.stopAnimating()
+            updateDataSource(with: viewModels)
+        case .error:
+            tableView.isHidden = true
+            loadingIndicator.stopAnimating()
+        }
+    }
+    
+    private func updateDataSource(with viewModels: [UserListTableCellViewModel]) {
+        var snapshot = Snapshot()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(viewModels, toSection: .main)
+        dataSource?.apply(snapshot, animatingDifferences: false)
     }
     
     private func setupDataSource() {
         dataSource = UITableViewDiffableDataSource(
-            tableView: self.tableView,
+            tableView: tableView,
             cellProvider: { [weak self] tableView, indexPath, viewModel in
                 guard self != nil else { return UITableViewCell() }
                 let cell = tableView.dequeueReusableCell(with: UserListTableCell.self, for: indexPath)
+                cell.configure(with: viewModel)
                 return cell
             })
     }
