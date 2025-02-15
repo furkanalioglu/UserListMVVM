@@ -44,7 +44,6 @@ final class UserListController: NiblessViewController {
     private func subscribe() {
         viewModel.destination
             .dropFirst()
-            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] destination in
                 guard let self else { return }
@@ -57,9 +56,8 @@ final class UserListController: NiblessViewController {
         guard let destination = destination else { return }
         
         switch destination {
-        case .userDetail(let userId):
-            let user = self.viewModel.users.first { $0.id == userId }
-            let detailViewModel = UserDetailViewModel(user: user!)
+        case .userDetail(let user):
+            let detailViewModel = UserDetailViewModel(user: user)
             let detailController = UserDetailController(viewModel: detailViewModel)
             navigationController?.pushViewController(detailController, animated: true)
         }

@@ -16,8 +16,8 @@ protocol UserListViewModelProtocol {
     func viewDidAppear()
 }
 
-enum UserListDestinations: Equatable {
-    case userDetail(_ id: Int)
+enum UserListDestinations {
+    case userDetail(_ user: User)
 }
 
 enum UserListViewState {

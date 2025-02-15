@@ -45,8 +45,8 @@ final class UserListViewModel: UserListViewModelProtocol {
     
     func didSelectRow(at indexPath: IndexPath) {
         let selectedUser = users[indexPath.row]
-        guard let id = selectedUser.id else { return }
-        destinationSubject.send(.userDetail(id))
+        guard destinationSubject.value == nil else { return }
+        destinationSubject.send(.userDetail(selectedUser))
     }
     
     func viewDidAppear() {
