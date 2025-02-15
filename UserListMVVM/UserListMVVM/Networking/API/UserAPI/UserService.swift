@@ -13,14 +13,20 @@ protocol UserServiceProtocol {
 }
 
 final class UserService: UserServiceProtocol {
-    private let networking: NetworkingProtocol
+    private let router = Router<UserAPI>()
+    private var cancellables = Set<AnyCancellable>()
     
-    init(networking: NetworkingProtocol) {
-        self.networking = networking
-    }
+    init() {}
     
     func fetchUsers() -> AnyPublisher<[User], NetworkError> {
-        let endpoint = UserAPI.fetchUsers
-        return networking.request(endpoint)
+        return router.request(.fetchUsers)
+            .decode(type: [User].self, decoder: JSONDecoder())
+            .mapError { error in
+                if let networkError = error as? NetworkError {
+                    return networkError
+                }
+                return NetworkError.decodingFailed(error)
+            }
+            .eraseToAnyPublisher()
     }
 }
