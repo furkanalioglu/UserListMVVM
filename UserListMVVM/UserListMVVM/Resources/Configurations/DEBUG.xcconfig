@@ -1,0 +1,11 @@
+//
+//  DEBUG.xcconfig
+//  UserListMVVM
+//
+//  Created by furkan on 15.02.2025.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+VALUE_1 = "jsonplaceholder.typicode.com"
