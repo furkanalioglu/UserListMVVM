@@ -13,9 +13,11 @@ protocol UserRepositoryProtocol {
 }
 
 final class UserRepository: UserRepositoryProtocol {
-    private let router = Router<UserAPI>()
+    private let router: Router<UserAPI>
     
-    init() {}
+    init(router: Router<UserAPI> = Router<UserAPI>()) {
+        self.router = router
+    }
     
     func fetchUsers() -> AnyPublisher<[User], NetworkError> {
         return router.request(.fetchUsers)

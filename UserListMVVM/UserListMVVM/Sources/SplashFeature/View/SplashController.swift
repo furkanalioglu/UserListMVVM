@@ -41,6 +41,7 @@ final class SplashController: NiblessViewController {
     
     private func subscribe() {
         viewModel.viewState
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] state in
                 self?.handleViewState(state)

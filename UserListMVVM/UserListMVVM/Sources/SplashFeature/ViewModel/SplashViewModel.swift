@@ -19,9 +19,9 @@ final class SplashViewModel: SplashViewModelProtocol {
     
     // MARK: - Lifecycle
     init(appRoot: CurrentValueSubject<Roots, Never>,
-         service: UserRepositoryProtocol = UserRepository()) {
+         repo: UserRepositoryProtocol = UserRepository()) {
         self.appRoot = appRoot
-        self.repo = service
+        self.repo = repo
         self.viewState = CurrentValueSubject<SplashViewState, Never>(.loading)
         self.fetchUsers()
     }
