@@ -111,6 +111,6 @@ final class UserListRootView: NiblessView {
 
 extension UserListRootView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+        viewModel.didSelectRow(at: indexPath)
     }
 }

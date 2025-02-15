@@ -8,12 +8,16 @@
 import Foundation
 import Combine
 
-protocol UserListViewModelDelegate: AnyObject {}
-
 protocol UserListViewModelProtocol {
     var users: [User] { get }
-    var delegate: UserListViewModelDelegate? { get set }
     var state: AnyPublisher<UserListViewState, Never> { get }
+    var destination: AnyPublisher<UserListDestinations?, Never> { get }
+    func didSelectRow(at indexPath: IndexPath)
+    func viewDidAppear()
+}
+
+enum UserListDestinations: Equatable {
+    case userDetail(_ id: Int)
 }
 
 enum UserListViewState {
