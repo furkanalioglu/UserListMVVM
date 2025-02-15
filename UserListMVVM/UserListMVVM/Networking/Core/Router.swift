@@ -8,16 +8,6 @@
 import Foundation
 import Combine
 
-public typealias NetworkRouterCompletion = (_ data: Data?, _ response: URLResponse?, _ error: Error?) -> Void
-
-public struct NetworkRouterCompletionWrapper {
-    public let completion: NetworkRouterCompletion
-    
-    public init(completion: @escaping NetworkRouterCompletion) {
-        self.completion = completion
-    }
-}
-
 protocol NetworkRouter: AnyObject {
     associatedtype EndPoint: EndPointType
     func request(_ route: EndPoint) -> AnyPublisher<Data, NetworkError>

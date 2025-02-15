@@ -15,7 +15,6 @@ extension UserAPI: EndPointType {
     var baseURL: URL {
         let urlString = BuildConfiguration().value(for: .baseURL)
         guard let url = URL(string: "https://" + urlString) else {
-            debugPrint("URL is",urlString)
             fatalError("baseURL could not be configured.")
         }
         return url
