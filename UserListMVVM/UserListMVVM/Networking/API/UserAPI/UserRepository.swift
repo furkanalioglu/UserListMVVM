@@ -8,15 +8,16 @@
 import Foundation
 import Combine
 
-protocol UserServiceProtocol {
+protocol UserRepositoryProtocol {
     func fetchUsers() -> AnyPublisher<[User], NetworkError>
 }
 
-final class UserService: UserServiceProtocol {
-    private let router = Router<UserAPI>()
-    private var cancellables = Set<AnyCancellable>()
+final class UserRepository: UserRepositoryProtocol {
+    private let router: Router<UserAPI>
     
-    init() {}
+    init(router: Router<UserAPI> = Router<UserAPI>()) {
+        self.router = router
+    }
     
     func fetchUsers() -> AnyPublisher<[User], NetworkError> {
         return router.request(.fetchUsers)

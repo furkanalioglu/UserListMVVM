@@ -13,8 +13,7 @@ enum UserAPI {
 
 extension UserAPI: EndPointType {
     var baseURL: URL {
-        let urlString = BuildConfiguration().value(for: .baseURL)
-        guard let url = URL(string: "https://" + urlString) else {
+        guard let url = URL(string: "https://jsonplaceholder.typicode.com") else {
             fatalError("baseURL could not be configured.")
         }
         return url
