@@ -15,6 +15,7 @@ protocol SplashViewModelProtocol {
   
   // MARK: - Input
   func tryAgainAction()
+  func fetchUsers()
 }
 
 // MARK: - View State

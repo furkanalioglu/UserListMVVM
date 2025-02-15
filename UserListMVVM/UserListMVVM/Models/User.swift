@@ -7,18 +7,29 @@
 
 import Foundation
 
-struct User: Codable {
-    let id: Int?
-    let name: String?
-    let username: String?
-    let email: String?
-    let address: Address?
-    let phone: String?
-    let website: String?
-    let company: Company?
+public struct User: Codable {
+   public let id: Int?
+   public let name: String?
+   public let username: String?
+   public let email: String?
+   public let address: Address?
+   public let phone: String?
+   public let website: String?
+   public let company: Company?
+    
+    public init(id: Int? = nil, name: String? = nil, username: String? = nil, email: String? = nil, address: Address? = nil, phone: String? = nil, website: String? = nil, company: Company? = nil) {
+        self.id = id
+        self.name = name
+        self.username = username
+        self.email = email
+        self.address = address
+        self.phone = phone
+        self.website = website
+        self.company = company
+    }
 }
 
-struct Address: Codable, Hashable {
+public struct Address: Codable, Hashable {
     let street: String?
     let suite: String?
     let city: String?
@@ -26,12 +37,12 @@ struct Address: Codable, Hashable {
     let geo: Geo?
 }
 
-struct Geo: Codable, Hashable {
+public struct Geo: Codable, Hashable {
     let lat: String?
     let lng: String?
 }
 
-struct Company: Codable, Hashable {
+public struct Company: Codable, Hashable {
     let name: String?
     let catchPhrase: String?
     let bs: String?

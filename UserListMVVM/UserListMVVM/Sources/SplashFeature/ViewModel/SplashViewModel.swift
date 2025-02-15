@@ -31,7 +31,7 @@ final class SplashViewModel: SplashViewModelProtocol {
         self.fetchUsers()
     }
     
-    private func fetchUsers() {
+    func fetchUsers() {
         viewState.value = .loading
         
         repo.fetchUsers()
