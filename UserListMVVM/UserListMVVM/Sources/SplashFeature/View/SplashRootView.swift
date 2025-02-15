@@ -70,7 +70,6 @@ final class SplashRootView: NiblessView {
     }
     
     private func setupViews() {
-        backgroundColor = .systemBackground
         mainHorizontalStackView.translatesAutoresizingMaskIntoConstraints = false
         appLogoImageView.translatesAutoresizingMaskIntoConstraints = false
         appNameLabel.translatesAutoresizingMaskIntoConstraints = false

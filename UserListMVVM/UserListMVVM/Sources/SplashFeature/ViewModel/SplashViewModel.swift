@@ -18,11 +18,17 @@ final class SplashViewModel: SplashViewModelProtocol {
     private let appRoot: CurrentValueSubject<Roots, Never>
     private let service: UserServiceProtocol
     
-    init(appRoot: CurrentValueSubject<Roots, Never>, 
+    // MARK: - Initializers
+    init(appRoot: CurrentValueSubject<Roots, Never>,
          service: UserServiceProtocol = UserService()) {
         self.appRoot = appRoot
         self.service = service
         self.viewState = CurrentValueSubject<SplashViewState, Never>(.loading)
+        self.fetchUsers()
+    }
+    
+    // MARK: - Methods
+    internal func tryAgainAction() {
         self.fetchUsers()
     }
     
@@ -36,17 +42,16 @@ final class SplashViewModel: SplashViewModelProtocol {
                 switch completion {
                 case .finished:
                     break
-                case .failure:
-                    self.viewState.value = .error
+                case .failure(let error):
+                    self.viewState.value = .error(
+                        error.errorDescription ??
+                        error.localizedDescription
+                    )
                 }
             } receiveValue: { [weak self] users in
                 guard let self = self else { return }
                 self.appRoot.send(.userList(users))
             }
             .store(in: &disposeBag)
-    }
-    
-    internal func tryAgainAction() {
-        self.fetchUsers()
     }
 }

@@ -23,5 +23,5 @@ protocol SplashViewModelProtocol {
 // MARK: - View State
 enum SplashViewState: Equatable {
   case loading
-  case error
+  case error(String)
 }

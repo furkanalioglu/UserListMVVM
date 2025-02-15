@@ -24,6 +24,8 @@ public final class AlertPresenter: AlertPresenting {
                          buttonTitle: String = "OK",
                          action: (() -> Void)? = nil) {
         
+        DispatchQueue.main.async { [weak viewController] in
+        
         let alertController = UIAlertController(title: title,
                                               message: message,
                                               preferredStyle: .alert)
@@ -33,19 +35,8 @@ public final class AlertPresenter: AlertPresenting {
         }
         
         alertController.addAction(okAction)
-        
-        DispatchQueue.main.async { [weak viewController] in
+
             viewController?.present(alertController, animated: true)
         }
-    }
-    
-    public func showError(on viewController: UIViewController,
-                         title: String = "Error",
-                         message: String,
-                         buttonTitle: String = "OK") {
-        showAlert(on: viewController,
-                 title: title,
-                 message: message,
-                 buttonTitle: buttonTitle)
     }
 }

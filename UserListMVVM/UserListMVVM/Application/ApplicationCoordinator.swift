@@ -75,7 +75,6 @@ class ApplicationCoordinator: Coordinator {
         }
     }
     
-    
     private func startSplashFlow() {
         self.childCoordinators.removeAll()
         let navigationController = UINavigationController()
@@ -87,6 +86,11 @@ class ApplicationCoordinator: Coordinator {
     
     private func startUserListFlow(with users: [User]) {
         self.childCoordinators.removeAll()
+        let navigationController = UINavigationController()
+        let viewModel = UserListViewModel(appRoot: appRoot, users: users)
+        let userListController = UserListController(viewModel: viewModel)
+        navigationController.setViewControllers([userListController], animated: false)
+        setRootWithAnimation(navigationController)
     }
     
     private func setRootWithAnimation(_ controller: UIViewController) {

@@ -52,11 +52,11 @@ final class SplashController: NiblessViewController, SplashViewModelDelegate {
         switch state {
         case .loading:
             break
-        case .error:
+        case .error(let error):
             alertPresenter.showAlert(
                 on: self,
                 title: "Error",
-                message: "Failed to load users. Please try again.",
+                message: error,
                 buttonTitle: "OK",
                 action: { self.viewModel.tryAgainAction() }
             )
