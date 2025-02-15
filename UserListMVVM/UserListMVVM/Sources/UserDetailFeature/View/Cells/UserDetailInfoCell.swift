@@ -37,6 +37,12 @@ final class UserDetailInfoCell: NiblessTableViewCell {
         setupUI()
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        titleLabel.text = nil
+        valueLabel.text = nil
+    }
+    
     private func setupUI() {
         selectionStyle = .none
         backgroundColor = .clear
@@ -56,11 +62,5 @@ final class UserDetailInfoCell: NiblessTableViewCell {
     func configure(with viewModel: UserDetailInfoCellViewModel) {
         titleLabel.text = viewModel.title
         valueLabel.text = viewModel.value
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        titleLabel.text = nil
-        valueLabel.text = nil
     }
 } 

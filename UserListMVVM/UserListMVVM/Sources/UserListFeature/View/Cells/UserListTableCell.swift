@@ -9,7 +9,7 @@ import UIKit
 
 final class UserListTableCell: NiblessTableViewCell {
     
-    private lazy var containerStackView: UIStackView = {
+    private lazy var mainVerticalStack: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.spacing = 0
@@ -33,6 +33,11 @@ final class UserListTableCell: NiblessTableViewCell {
         return label
     }()
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        nameLabel.text = nil
+        emailLabel.text = nil
+    }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -41,27 +46,21 @@ final class UserListTableCell: NiblessTableViewCell {
     
     private func setupUI() {
         selectionStyle = .none        
-        contentView.addSubview(containerStackView)
+        contentView.addSubview(mainVerticalStack)
         
-        containerStackView.addArrangedSubview(nameLabel)
-        containerStackView.addArrangedSubview(emailLabel)
+        mainVerticalStack.addArrangedSubview(nameLabel)
+        mainVerticalStack.addArrangedSubview(emailLabel)
         
         NSLayoutConstraint.activate([
-            containerStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
-            containerStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            containerStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            containerStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -12),
+            mainVerticalStack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
+            mainVerticalStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            mainVerticalStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            mainVerticalStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -12),
         ])
     }
     
     func configure(with viewModel: UserListTableCellViewModel) {
         nameLabel.text = viewModel.name
         emailLabel.text = viewModel.email
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        nameLabel.text = nil
-        emailLabel.text = nil
     }
 }

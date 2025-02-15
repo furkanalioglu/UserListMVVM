@@ -51,6 +51,12 @@ final class UserDetailHeaderCell: NiblessTableViewCell {
         constructHierarchy()
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        nameLabel.text = nil
+        usernameLabel.text = nil
+    }
+    
     private func setupUI() {
         selectionStyle = .none
         mainStackView.translatesAutoresizingMaskIntoConstraints = false
