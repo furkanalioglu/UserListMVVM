@@ -15,13 +15,13 @@ final class SplashViewModel: SplashViewModelProtocol {
     // MARK: - Private Properties
     private var disposeBag = Set<AnyCancellable>()
     private let appRoot: CurrentValueSubject<Roots, Never>
-    private let service: UserServiceProtocol
+    private let repo: UserRepositoryProtocol
     
     // MARK: - Lifecycle
     init(appRoot: CurrentValueSubject<Roots, Never>,
-         service: UserServiceProtocol = UserService()) {
+         service: UserRepositoryProtocol = UserRepository()) {
         self.appRoot = appRoot
-        self.service = service
+        self.repo = service
         self.viewState = CurrentValueSubject<SplashViewState, Never>(.loading)
         self.fetchUsers()
     }
@@ -34,7 +34,7 @@ final class SplashViewModel: SplashViewModelProtocol {
     private func fetchUsers() {
         viewState.value = .loading
         
-        service.fetchUsers()
+        repo.fetchUsers()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
                 guard let self = self else { return }
