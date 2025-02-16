@@ -17,7 +17,15 @@ public struct User: Codable {
    public let website: String?
    public let company: Company?
     
-    public init(id: Int? = nil, name: String? = nil, username: String? = nil, email: String? = nil, address: Address? = nil, phone: String? = nil, website: String? = nil, company: Company? = nil) {
+    public init(id: Int? = nil,
+                name: String? = nil,
+                username: String? = nil,
+                email: String? = nil,
+                address: Address? = nil,
+                phone: String? = nil,
+                website: String? = nil,
+                company: Company? = nil
+    ) {
         self.id = id
         self.name = name
         self.username = username

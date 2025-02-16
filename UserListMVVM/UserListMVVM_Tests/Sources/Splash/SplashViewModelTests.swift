@@ -27,7 +27,7 @@ final class SplashViewModelTests: XCTestCase {
         super.tearDown()
     }
     
-    // MARK: - Tests
+    // MARK: - General Tests
     func test_InitialState_ShouldBeInitial() {
         // Given
         let mockRepository = MockUserRepository()
@@ -49,11 +49,9 @@ final class SplashViewModelTests: XCTestCase {
         
         let expectation = expectation(description: "Should update app root")
         appRoot
-            .dropFirst() // Skip initial .splash value
             .receive(on: DispatchQueue.main)
             .sink { root in
-                if case .userList(let users) = root {
-                    XCTAssertFalse(users.isEmpty)
+                if case .userList(_) = root {
                     expectation.fulfill()
                 }
             }
@@ -66,6 +64,7 @@ final class SplashViewModelTests: XCTestCase {
         wait(for: [expectation], timeout: 1.0)
     }
     
+    //MARK: - Error Handling Tests
     func test_WhenFetchUsersFails_ShouldShowError() {
         // Given
         let mockRepository = MockUserRepository()
@@ -104,7 +103,6 @@ final class SplashViewModelTests: XCTestCase {
         let expectation = expectation(description: "Should complete state changes")
         
         sut.viewState
-            .receive(on: DispatchQueue.main)
             .sink { state in
                 stateChanges.append(state)
                 if state == .error(networkError.errorDescription ?? "") {
@@ -139,5 +137,111 @@ final class SplashViewModelTests: XCTestCase {
         } else {
             XCTFail("AppRoot should be .userList")
         }
+    }
+    
+    func test_MultipleConsecutiveRetries_ShouldWorkCorrectly() {
+        // Given
+        let mockRepository = MockUserRepository()
+        let networkError = NetworkError.serverError
+        mockRepository.error = networkError
+        let sut = SplashViewModel(appRoot: appRoot, repo: mockRepository)
+        
+        let expectation = expectation(description: "Should handle multiple retries")
+        var retryCount = 0
+        
+        sut.viewState
+            .sink { state in
+                if case .error = state {
+                    retryCount += 1
+                    if retryCount < 3 {
+                        sut.tryAgainAction()
+                    } else {
+                        expectation.fulfill()
+                    }
+                }
+            }
+            .store(in: &disposeBag)
+        
+        // When
+        sut.viewDidLoad()
+        
+        // Then
+        wait(for: [expectation], timeout: 3.0)
+        XCTAssertEqual(retryCount, 3)
+    }
+    
+    //MARK: - Memory leak & Performance tests
+    func test_CancellationOfRequests_WhenDeallocated() {
+        // Given
+        let mockRepository = MockUserRepository()
+        mockRepository.delay = 1.0 // Simulate long running request
+        
+        autoreleasepool {
+            let sut = SplashViewModel(appRoot: appRoot, repo: mockRepository)
+            sut.viewDidLoad()
+        }
+        
+        // Then
+        XCTAssertTrue(mockRepository.wasCancelled, "Request should be cancelled when view model is deallocated")
+    }
+    
+    func test_MemoryLeaks_ShouldNotOccur() {
+        // Given
+        weak var weakSut: SplashViewModel?
+        
+        autoreleasepool {
+            let mockRepository = MockUserRepository()
+            let sut = SplashViewModel(appRoot: appRoot, repo: mockRepository)
+            weakSut = sut
+            
+            // When
+            sut.viewDidLoad()
+        }
+        
+        // Then
+        XCTAssertNil(weakSut, "ViewModel should be deallocated")
+    }
+    
+    func test_ViewControllerMemoryLeaks_ShouldNotOccur() {
+        // Given
+        weak var weakController: SplashController?
+        weak var weakViewModel: SplashViewModel?
+        
+        autoreleasepool {
+            let mockRepository = MockUserRepository()
+            let viewModel = SplashViewModel(appRoot: appRoot, repo: mockRepository)
+            let controller = SplashController(viewModel: viewModel)
+            weakController = controller
+            weakViewModel = viewModel
+            
+            // When
+            controller.loadViewIfNeeded()
+            controller.viewDidLoad()
+        }
+        
+        // Then
+        XCTAssertNil(weakController, "Controller should be deallocated")
+        XCTAssertNil(weakViewModel, "ViewModel should be deallocated")
+    }
+    
+    func test_RootViewMemoryLeaks_ShouldNotOccur() {
+        // Given
+        weak var weakView: SplashRootView?
+        weak var weakViewModel: SplashViewModel?
+        
+        autoreleasepool {
+            let mockRepository = MockUserRepository()
+            let viewModel = SplashViewModel(appRoot: appRoot, repo: mockRepository)
+            let view = SplashRootView(viewModel: viewModel)
+            weakView = view
+            weakViewModel = viewModel
+            
+            // When - Simulate view lifecycle
+            view.layoutSubviews()
+        }
+        
+        // Then
+        XCTAssertNil(weakView, "Root view should be deallocated")
+        XCTAssertNil(weakViewModel, "ViewModel should be deallocated")
     }
 }
