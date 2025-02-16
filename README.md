@@ -25,7 +25,7 @@ Module/
 ### Component Responsibilities
 
 - **Model**: Contains the cell view models that handle the presentation logic for table/collection view cells
-- **View**: Manages UI state changes and user interactions that don't require navigation
+- **View**: Manages UI state changes and user interactions that don't require navigation or any lifecycle event
 - **ViewController**: Handles navigation actions and view controller-specific UI operations
 - **ViewModel**: Implements business logic and manages data flow
 
