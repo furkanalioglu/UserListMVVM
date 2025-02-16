@@ -31,7 +31,6 @@ final class UserDetailViewModelTests: XCTestCase {
         let sut = UserDetailViewModel(user: mockUser)
         let expectation = expectation(description: "Should setup correct sections")
         
-        // When
         sut.state
             .sink { state in
                 if case let .loaded(sections) = state {
@@ -72,7 +71,52 @@ final class UserDetailViewModelTests: XCTestCase {
             }
             .store(in: &disposeBag)
         
+        
+        // When
+        sut.viewDidLoad()
+        
+        
+        // Then
         wait(for: [expectation], timeout: 1.0)
+    }
+    
+    func test_FirState_ShouldBeInitial() {
+        // Given
+        let mockUser = UserBuilder.buildMockUsers().first!
+        let sut = UserDetailViewModel(user: mockUser)
+        
+        sut.state
+            .sink { state in
+                XCTAssertEqual(state, UserDetailViewState.initial)
+            }
+            .store(in: &disposeBag)
+        
+        // When
+        sut.viewDidLoad()
+        
+        //Then
+        //Nothing.
+    }
+    
+    func test_AfterViewDidLoad_ShouldBeLoaded() {
+        // Given
+        let mockUser = UserBuilder.buildMockUsers().first!
+        let sut = UserDetailViewModel(user: mockUser)
+        let expectation = expectation(description: "Should be in loaded state")
+        
+        // When
+        sut.state
+            .sink { state in
+                if case .loaded = state {
+                    expectation.fulfill()
+                }
+            }
+            .store(in: &disposeBag)
+            
+        sut.viewDidLoad()
+        
+        // Then
+        wait(for: [expectation], timeout: 0.5)
     }
     
     // MARK: - Memory Management Tests
@@ -86,6 +130,7 @@ final class UserDetailViewModelTests: XCTestCase {
             weakSut = sut
             
             // When - Force a state update
+            sut.viewDidLoad()
             _ = sut.state.sink { _ in }
         }
         

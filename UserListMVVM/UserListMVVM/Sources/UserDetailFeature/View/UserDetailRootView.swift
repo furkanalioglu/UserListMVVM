@@ -73,8 +73,8 @@ final class UserDetailRootView: NiblessView {
     
     private func setupBindings() {
         viewModel.state
-            .receive(on: DispatchQueue.main)
             .sink { [weak self] state in
+                debugPrint("State is",state)
                 self?.handleState(state)
             }
             .store(in: &cancellables)

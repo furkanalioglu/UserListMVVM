@@ -13,7 +13,9 @@ final class UserDetailViewModel: UserDetailViewModelProtocol {
     private(set) var user: User
     
     var state: AnyPublisher<UserDetailViewState, Never> {
-        stateSubject.eraseToAnyPublisher()
+        stateSubject
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
     }
     
     // MARK: - Private Properties
@@ -23,6 +25,9 @@ final class UserDetailViewModel: UserDetailViewModelProtocol {
     // MARK: - Lifecycle
     init(user: User) {
         self.user = user
+    }
+    
+    func viewDidLoad() {
         setupInitialState()
     }
     
