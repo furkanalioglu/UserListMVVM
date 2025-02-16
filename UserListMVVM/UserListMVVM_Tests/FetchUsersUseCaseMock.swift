@@ -1,12 +1,21 @@
+//
+//  FetchUsersUseCaseMock.swift
+//  UserListMVVM_Tests
+//
+//  Created by furkan on 16.02.2025.
+//
+
 import Foundation
 import Combine
 @testable import UserListMVVM
 
-final class MockUserRepository: UserRepositoryProtocol {
-    var result: [User]?
-    var error: NetworkError?
+public class FetchUsersUseCaseMock: FetchUsersUseCase {
+    public var error: NetworkError?
+    public var result: [User]?
     
-    func fetchUsers() -> AnyPublisher<[User], NetworkError> {
+    public init() { }
+    
+    public func execute() -> AnyPublisher<[User], NetworkError> {
         if let error = error {
             return Fail(error: error).eraseToAnyPublisher()
         }
@@ -21,4 +30,4 @@ final class MockUserRepository: UserRepositoryProtocol {
             .setFailureType(to: NetworkError.self)
             .eraseToAnyPublisher()
     }
-} 
+}

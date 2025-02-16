@@ -14,12 +14,15 @@ protocol SplashViewModelProtocol {
   var viewState: CurrentValueSubject<SplashViewState, Never> { get }
   
   // MARK: - Input
+  func viewDidLoad()
   func tryAgainAction()
-  func fetchUsers()
+  func handleLoadedState()
 }
 
 // MARK: - View State
 enum SplashViewState: Equatable {
+  case initial
   case loading
   case error(String)
+  case loaded
 }

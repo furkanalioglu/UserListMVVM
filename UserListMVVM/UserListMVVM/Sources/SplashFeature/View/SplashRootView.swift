@@ -58,8 +58,8 @@ final class SplashRootView: NiblessView {
         let activityIndicator = UIActivityIndicatorView(style: .large)
         activityIndicator.color = .label
         activityIndicator.style = .medium
-        activityIndicator.hidesWhenStopped = true
-        activityIndicator.startAnimating()
+        activityIndicator.isHidden = true
+        activityIndicator.stopAnimating()
         return activityIndicator
     }()
     
@@ -69,6 +69,7 @@ final class SplashRootView: NiblessView {
         super.init(frame: .zero)
         setupViews()
         constructHierarchy()
+        subscribe()
     }
     
     // MARK: - Methods
@@ -100,6 +101,32 @@ final class SplashRootView: NiblessView {
             self.appLogoImageView.centerYAnchor.constraint(equalTo: self.appLogoImageContainerView.centerYAnchor),
         ])
         self.appNameLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
+    }
+    
+    private func subscribe() {
+        viewModel.viewState
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] state in
+                debugPrint("state is",state)
+                self?.handleActivityIndicatorState(state)
+            }
+            .store(in: &disposeBag)
+    }
+    
+    private func handleActivityIndicatorState(_ state: SplashViewState) {
+        switch state {
+        case .initial, .loaded:
+            self.activityIndicator.isHidden = true
+            self.activityIndicator.stopAnimating()
+            break
+        case .loading:
+            self.activityIndicator.isHidden = false
+            self.activityIndicator.startAnimating()
+            break
+        case .error(_):
+            self.activityIndicator.isHidden = true
+            self.activityIndicator.stopAnimating()
+        }
     }
 }
 
