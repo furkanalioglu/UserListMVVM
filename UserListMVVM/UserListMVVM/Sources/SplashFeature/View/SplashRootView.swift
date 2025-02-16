@@ -55,11 +55,10 @@ final class SplashRootView: NiblessView {
     }()
     
     private lazy var activityIndicator: UIActivityIndicatorView = {
-        let activityIndicator = UIActivityIndicatorView(style: .large)
-        activityIndicator.color = .label
+        let activityIndicator = UIActivityIndicatorView()
+        activityIndicator.color = .systemGray
         activityIndicator.style = .medium
-        activityIndicator.isHidden = true
-        activityIndicator.stopAnimating()
+        activityIndicator.hidesWhenStopped = true
         return activityIndicator
     }()
     
@@ -67,6 +66,7 @@ final class SplashRootView: NiblessView {
     init(viewModel: SplashViewModelProtocol) {
         self.viewModel = viewModel
         super.init(frame: .zero)
+        self.backgroundColor = .systemBackground
         setupViews()
         constructHierarchy()
         subscribe()
@@ -78,13 +78,14 @@ final class SplashRootView: NiblessView {
         appLogoImageView.translatesAutoresizingMaskIntoConstraints = false
         appNameLabel.translatesAutoresizingMaskIntoConstraints = false
         appLogoImageContainerView.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         
         self.addSubview(mainHorizontalStackView)
+        self.addSubview(activityIndicator)
         self.mainHorizontalStackView.addArrangedSubview(mainVerticalStackview)
         self.mainVerticalStackview.addArrangedSubview(self.appLogoImageContainerView)
         self.appLogoImageContainerView.addSubview(self.appLogoImageView)
         self.mainVerticalStackview.addArrangedSubview(self.appNameLabel)
-        self.mainVerticalStackview.addArrangedSubview(self.activityIndicator)
     }
     
     private func constructHierarchy() {
@@ -99,6 +100,9 @@ final class SplashRootView: NiblessView {
             self.appLogoImageView.heightAnchor.constraint(equalToConstant: 100),
             self.appLogoImageView.centerXAnchor.constraint(equalTo: self.appLogoImageContainerView.centerXAnchor),
             self.appLogoImageView.centerYAnchor.constraint(equalTo: self.appLogoImageContainerView.centerYAnchor),
+            
+            self.activityIndicator.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            self.activityIndicator.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor,constant: -12)
         ])
         self.appNameLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
     }
@@ -114,16 +118,11 @@ final class SplashRootView: NiblessView {
     private func handleActivityIndicatorState(_ state: SplashViewState) {
         switch state {
         case .initial, .loaded:
-            self.activityIndicator.isHidden = true
             self.activityIndicator.stopAnimating()
-            break
         case .loading:
-            self.activityIndicator.isHidden = false
             self.activityIndicator.startAnimating()
-            break
         case .error(_):
-            self.activityIndicator.isHidden = true
-            self.activityIndicator.stopAnimating()
+            break
         }
     }
 }
