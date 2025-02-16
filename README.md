@@ -10,7 +10,7 @@ A modern iOS application using MVVM pattern, Combine framework for reactive prog
 
 ## 🏗 Architecture
 
-The project follows the MVVM (Model-View-ViewModel) architecture pattern with a Coordinator pattern for navigation flow management. 
+The project follows the MVVM (Model-View-ViewModel) architecture pattern. 
 Each module is structured with clear separation of concerns:
 ```
 Module/
