@@ -18,7 +18,8 @@ Module/
 │   └── CellViewModel/
 ├── View/
 │   └── Cells/
-├── ViewController/
+│   └── RootView
+│   └── ViewController
 └── ViewModel/
 ```
 
