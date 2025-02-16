@@ -10,20 +10,24 @@ import Combine
 
 final class SplashViewModel: SplashViewModelProtocol {
     // MARK: - Protocol Properties
-    private(set) var viewState: CurrentValueSubject<SplashViewState, Never>
+    private var viewState = CurrentValueSubject<SplashViewState, Never>(.initial)
     
+    var statePublisher: AnyPublisher<SplashViewState, Never> {
+        viewState
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
+    }
     // MARK: - Private Properties
     private var disposeBag = Set<AnyCancellable>()
     private let appRoot: CurrentValueSubject<Roots, Never>
     private let repo: UserRepositoryProtocol
+    private var users: [User] = []
     
     // MARK: - Lifecycle
     init(appRoot: CurrentValueSubject<Roots, Never>,
          repo: UserRepositoryProtocol = UserRepository()) {
         self.appRoot = appRoot
         self.repo = repo
-        self.viewState = CurrentValueSubject<SplashViewState, Never>(.loading)
-        self.fetchUsers()
     }
     
     // MARK: - Methods
@@ -31,7 +35,7 @@ final class SplashViewModel: SplashViewModelProtocol {
         self.fetchUsers()
     }
     
-    private func fetchUsers() {
+    func fetchUsers() {
         viewState.value = .loading
         
         repo.fetchUsers()
@@ -49,8 +53,18 @@ final class SplashViewModel: SplashViewModelProtocol {
                 }
             } receiveValue: { [weak self] users in
                 guard let self = self else { return }
-                self.appRoot.send(.userList(users))
+                self.users = users
+                self.viewState.value = .loaded
+                self.handleLoadedState()
             }
             .store(in: &disposeBag)
+    }
+    
+    func handleLoadedState() {
+        self.appRoot.send(.userList(self.users))
+    }
+    
+    func viewDidLoad() {
+        self.fetchUsers()
     }
 }

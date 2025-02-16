@@ -13,11 +13,24 @@ protocol UserDetailViewModelDelegate: AnyObject {}
 protocol UserDetailViewModelProtocol {
     var user: User { get }
     var state: AnyPublisher<UserDetailViewState, Never> { get }
+    
+    func viewDidLoad()
 }
 
-enum UserDetailViewState {
+enum UserDetailViewState: Equatable {
     case initial
     case loaded([UserDetailSection])
+    
+    static func == (lhs: UserDetailViewState, rhs: UserDetailViewState) -> Bool {
+        switch (lhs, rhs) {
+        case (.initial, .initial):
+            return true
+        case let (.loaded(lhsSections), .loaded(rhsSections)):
+            return lhsSections == rhsSections
+        default:
+            return false
+        }
+    }
 }
 
 enum UserDetailSection: Hashable {

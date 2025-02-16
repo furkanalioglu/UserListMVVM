@@ -55,11 +55,10 @@ final class SplashRootView: NiblessView {
     }()
     
     private lazy var activityIndicator: UIActivityIndicatorView = {
-        let activityIndicator = UIActivityIndicatorView(style: .large)
-        activityIndicator.color = .label
+        let activityIndicator = UIActivityIndicatorView()
+        activityIndicator.color = .systemGray
         activityIndicator.style = .medium
         activityIndicator.hidesWhenStopped = true
-        activityIndicator.startAnimating()
         return activityIndicator
     }()
     
@@ -67,8 +66,10 @@ final class SplashRootView: NiblessView {
     init(viewModel: SplashViewModelProtocol) {
         self.viewModel = viewModel
         super.init(frame: .zero)
+        self.backgroundColor = .systemBackground
         setupViews()
         constructHierarchy()
+        subscribe()
     }
     
     // MARK: - Methods
@@ -77,13 +78,14 @@ final class SplashRootView: NiblessView {
         appLogoImageView.translatesAutoresizingMaskIntoConstraints = false
         appNameLabel.translatesAutoresizingMaskIntoConstraints = false
         appLogoImageContainerView.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         
         self.addSubview(mainHorizontalStackView)
+        self.addSubview(activityIndicator)
         self.mainHorizontalStackView.addArrangedSubview(mainVerticalStackview)
         self.mainVerticalStackview.addArrangedSubview(self.appLogoImageContainerView)
         self.appLogoImageContainerView.addSubview(self.appLogoImageView)
         self.mainVerticalStackview.addArrangedSubview(self.appNameLabel)
-        self.mainVerticalStackview.addArrangedSubview(self.activityIndicator)
     }
     
     private func constructHierarchy() {
@@ -98,8 +100,30 @@ final class SplashRootView: NiblessView {
             self.appLogoImageView.heightAnchor.constraint(equalToConstant: 100),
             self.appLogoImageView.centerXAnchor.constraint(equalTo: self.appLogoImageContainerView.centerXAnchor),
             self.appLogoImageView.centerYAnchor.constraint(equalTo: self.appLogoImageContainerView.centerYAnchor),
+            
+            self.activityIndicator.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            self.activityIndicator.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor,constant: -12)
         ])
         self.appNameLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
+    }
+    
+    private func subscribe() {
+        viewModel.statePublisher
+            .sink { [weak self] state in
+                self?.handleActivityIndicatorState(state)
+            }
+            .store(in: &disposeBag)
+    }
+    
+    private func handleActivityIndicatorState(_ state: SplashViewState) {
+        switch state {
+        case .initial, .loaded:
+            self.activityIndicator.stopAnimating()
+        case .loading:
+            self.activityIndicator.startAnimating()
+        case .error(_):
+            break
+        }
     }
 }
 

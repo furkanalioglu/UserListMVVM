@@ -32,6 +32,7 @@ final class SplashController: NiblessViewController {
         super.viewDidLoad()
         self.setupNavigationBar()
         self.subscribe()
+        self.viewModel.viewDidLoad()
     }
     
     // MARK: - Methods
@@ -40,9 +41,7 @@ final class SplashController: NiblessViewController {
     }
     
     private func subscribe() {
-        viewModel.viewState
-            .removeDuplicates()
-            .receive(on: DispatchQueue.main)
+        viewModel.statePublisher
             .sink { [weak self] state in
                 self?.handleViewState(state)
             }
@@ -51,7 +50,7 @@ final class SplashController: NiblessViewController {
     
     private func handleViewState(_ state: SplashViewState) {
         switch state {
-        case .loading:
+        case .initial, .loaded, .loading:
             break
         case .error(let error):
             alertPresenter.showAlert(

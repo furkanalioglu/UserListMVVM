@@ -8,7 +8,7 @@
 import UIKit
 import Combine
 
-final class UserListRootView: NiblessView {
+final class UserListRootView: NiblessView, Emptiable {
     // MARK: - Properties
     private let viewModel: UserListViewModelProtocol
     private var cancellables = Set<AnyCancellable>()
@@ -67,7 +67,6 @@ final class UserListRootView: NiblessView {
     
     private func setupBindings() {
         viewModel.state
-            .receive(on: DispatchQueue.main)
             .sink { [weak self] state in
                 self?.handleState(state)
             }
@@ -82,13 +81,20 @@ final class UserListRootView: NiblessView {
         case .loading:
             tableView.isHidden = true
             loadingIndicator.startAnimating()
+            hideEmptyView()
+        case .empty:
+            tableView.isHidden = true
+            loadingIndicator.stopAnimating()
+            showEmptyView(with: "No user found.")
         case .loaded(let viewModels):
             tableView.isHidden = false
             loadingIndicator.stopAnimating()
+            hideEmptyView()
             updateDataSource(with: viewModels)
-        case .error:
+        case .error: //Td: Handle error when pull to refresh added.
             tableView.isHidden = true
             loadingIndicator.stopAnimating()
+            hideEmptyView()
         }
     }
     

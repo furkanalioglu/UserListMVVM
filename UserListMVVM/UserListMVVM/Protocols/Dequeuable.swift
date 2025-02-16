@@ -7,12 +7,12 @@
 
 import UIKit.UITableViewCell
 
-public protocol Dequeuable {
+protocol Dequeuable {
   static var dequeuIdentifier: String { get }
 }
 
 extension Dequeuable where Self: UIView {
-  public static var dequeuIdentifier: String {
+  static var dequeuIdentifier: String {
     return String(describing: self)
   }
 }

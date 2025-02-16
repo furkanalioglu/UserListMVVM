@@ -15,10 +15,10 @@ public protocol AlertPresenting {
                   action: (() -> Void)?)
 }
 
-public final class AlertPresenter: AlertPresenting {
-    public init() {}
+final class AlertPresenter: AlertPresenting {
+    init() {}
     
-    public func showAlert(on viewController: UIViewController,
+    func showAlert(on viewController: UIViewController,
                          title: String,
                          message: String,
                          buttonTitle: String = "OK",

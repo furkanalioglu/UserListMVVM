@@ -13,11 +13,15 @@ final class UserListViewModel: UserListViewModelProtocol {
     private(set) var users: [User]
     
     internal var state: AnyPublisher<UserListViewState, Never> {
-        stateSubject.eraseToAnyPublisher()
+        stateSubject
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
     }
     
     internal var destination: AnyPublisher<UserListDestinations?, Never> {
-        destinationSubject.eraseToAnyPublisher()
+        destinationSubject
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
     }
     
     // MARK: - Private Properties
@@ -32,17 +36,11 @@ final class UserListViewModel: UserListViewModelProtocol {
          users: [User]) {
         self.appRoot = appRoot
         self.users = users
-        setupInitialState()
     }
     
     // MARK: - Methods
-    private func setupInitialState() {
-        let viewModels = users.map { user in
-            UserListTableCellViewModel(
-                user: user
-            )
-        }
-        stateSubject.send(.loaded(viewModels))
+    func viewDidLoad() {
+        setupInitialState()
     }
     
     func didSelectRow(at indexPath: IndexPath) {
@@ -58,5 +56,18 @@ final class UserListViewModel: UserListViewModelProtocol {
         }
         
         destinationSubject.send(nil)
+    }
+    
+    private func setupInitialState() {
+        if users.isEmpty == false {
+            let viewModels = users.map { user in
+                UserListTableCellViewModel(
+                    user: user
+                )
+            }
+            stateSubject.send(.loaded(viewModels))
+        }else{
+            stateSubject.send(.empty)
+        }
     }
 }

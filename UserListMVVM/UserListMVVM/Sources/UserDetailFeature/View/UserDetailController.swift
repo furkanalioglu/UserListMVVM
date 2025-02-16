@@ -24,6 +24,7 @@ final class UserDetailController: NiblessViewController, UserDetailViewModelDele
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavigationBar()
+        viewModel.viewDidLoad()
     }
     
     private func setupNavigationBar() {
