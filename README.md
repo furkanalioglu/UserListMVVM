@@ -2,6 +2,12 @@
 
 A modern iOS application using MVVM pattern, Combine framework for reactive programming, and programmatic UIKit implementation.
 
+## 📱 Screenshots
+
+| Light Mode | Dark Mode |
+|------------|------------|
+| <img src="Screenshots/light_mode.png" width="300"> | <img src="Screenshots/dark_mode.png" width="300"> |
+
 ## 🏗 Architecture
 
 The project follows the MVVM (Model-View-ViewModel) architecture pattern with a Coordinator pattern for navigation flow management. 
