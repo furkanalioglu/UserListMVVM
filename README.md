@@ -40,7 +40,7 @@ Module/
 
 ## 🔑 Key Features
 
-### Modern Collection View Implementation
+### Modern Table View Implementation
 - Utilizes `UITableViewDiffableDataSource` for efficient data management
 - Automatic diffing and animations for data updates
 - No more unneccessary `reloadData` calls
