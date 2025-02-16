@@ -7,18 +7,18 @@
 
 import Foundation
 
-public typealias Parameters = [String:Any]
+typealias Parameters = [String:Any]
 
-internal protocol ParameterEncoder {
+protocol ParameterEncoder {
     func encode(urlRequest: inout URLRequest, with parameters: Parameters) throws
 }
 
-internal enum ParameterEncoding {
+enum ParameterEncoding {
     
     case urlEncoding
     case jsonEncoding
     
-    public func encode(urlRequest: inout URLRequest,
+    func encode(urlRequest: inout URLRequest,
                        bodyParameters: Parameters?,
                        urlParameters: Parameters?) throws {
         do {

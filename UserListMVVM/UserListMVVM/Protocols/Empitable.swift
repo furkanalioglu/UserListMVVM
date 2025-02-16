@@ -7,7 +7,7 @@
 
 import UIKit
 
-public protocol Emptiable {
+protocol Emptiable {
     
     func showEmptyView(with message: String?)
     
@@ -15,7 +15,7 @@ public protocol Emptiable {
 }
 
 // MARK: - UIViewController
-public extension Emptiable where Self: UIView {
+extension Emptiable where Self: UIView {
     
     func showEmptyView(with message: String?) {
         let emptyView = EmptyView()

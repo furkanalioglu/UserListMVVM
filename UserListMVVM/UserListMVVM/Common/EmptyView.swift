@@ -9,7 +9,8 @@ import Foundation
 import UIKit
 
 internal class EmptyView: NiblessView {
-    lazy var mainHorizontalStackView: UIStackView = {
+    
+    private lazy var mainHorizontalStackView: UIStackView = {
         let stack = UIStackView()
         stack.axis = .horizontal
         stack.alignment = .center
@@ -17,8 +18,7 @@ internal class EmptyView: NiblessView {
         return stack
     }()
     
-    
-    lazy var mainVerticalStackView: UIStackView = {
+    private lazy var mainVerticalStackView: UIStackView = {
         let stack = UIStackView()
         stack.axis = .vertical
         stack.alignment = .center

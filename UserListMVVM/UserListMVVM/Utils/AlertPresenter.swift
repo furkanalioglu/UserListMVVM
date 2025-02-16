@@ -7,7 +7,7 @@
 
 import UIKit
 
-public protocol AlertPresenting {
+protocol AlertPresenting {
     func showAlert(on viewController: UIViewController,
                   title: String,
                   message: String,
