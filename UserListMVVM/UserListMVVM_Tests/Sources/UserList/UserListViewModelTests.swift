@@ -26,16 +26,18 @@ final class UserListViewModelTests: XCTestCase {
         super.tearDown()
     }
     
-    // MARK: - Initial State Tests
+    // MARK: - General Tests
     func test_InitialState_WithEmptyUsers_ShouldShowEmptyList() {
         // Given
         appRoot = CurrentValueSubject<Roots, Never>(.userList(UserBuilder.buildEmptyUsers()))
         let sut = UserListViewModel(appRoot: appRoot, users: UserBuilder.buildEmptyUsers())
-        let expectation = expectation(description: "Should show empty list")
+        let expectation = expectation(description: "Should show empty state")
+        var receivedStates: [UserListViewState] = []
+        
         sut.state
             .sink { state in
-                if case let .loaded(viewModels) = state {
-                    XCTAssertTrue(viewModels.isEmpty)
+                receivedStates.append(state)
+                if case .empty = state {
                     expectation.fulfill()
                 }
             }
@@ -46,6 +48,19 @@ final class UserListViewModelTests: XCTestCase {
         
         // Then
         wait(for: [expectation], timeout: 1.0)
+        
+        // Verify don't receive .loaded state
+        let hasLoadedState = receivedStates.contains { state in
+            if case .loaded = state {
+                return true
+            }
+            return false
+        }
+        XCTAssertFalse(hasLoadedState, "Received .loaded state when users were empty, expected only .empty state")
+        
+        // Verify we receive .initial then empty.
+        XCTAssertEqual(receivedStates.count, 2, "Should receive exactly one state")
+        XCTAssertTrue(receivedStates.contains(where: { if case .empty = $0 { return true }; return false }), "Should contain empty state")
     }
     
     func test_InitialState_WithMockUsers_ShouldShowUserList() { //TODO: - Handle empty state
@@ -62,6 +77,73 @@ final class UserListViewModelTests: XCTestCase {
                     XCTAssertEqual(viewModels.first?.id, mockUsers.first?.id)
                     XCTAssertEqual(viewModels.first?.name, mockUsers.first?.name)
                     XCTAssertEqual(viewModels.first?.email, mockUsers.first?.email)
+                    expectation.fulfill()
+                }
+            }
+            .store(in: &disposeBag)
+        
+        // When
+        sut.viewDidLoad()
+        
+        // Then
+        wait(for: [expectation], timeout: 1.0)
+    }
+    
+    func test_InitialState_WithEmptyUsers_ShouldShowEmptyState() {
+        // Given
+        appRoot = CurrentValueSubject<Roots, Never>(.userList(UserBuilder.buildEmptyUsers()))
+        let sut = UserListViewModel(appRoot: appRoot, users: UserBuilder.buildEmptyUsers())
+        let expectation = expectation(description: "Should show empty state")
+        
+        sut.state
+            .sink { state in
+                if case .empty = state {
+                    expectation.fulfill()
+                }
+            }
+            .store(in: &disposeBag)
+        
+        // When
+        sut.viewDidLoad()
+        
+        // Then
+        wait(for: [expectation], timeout: 1.0)
+    }
+    
+    func test_InitialState_WithMockUsers_ShouldNotShowEmptyState() {
+        // Given
+        let mockUsers = UserBuilder.buildMockUsers()
+        appRoot = CurrentValueSubject<Roots, Never>(.userList(mockUsers))
+        let sut = UserListViewModel(appRoot: appRoot, users: mockUsers)
+        let expectation = expectation(description: "Should show loaded state")
+        var receivedStates: [UserListViewState] = []
+        
+        sut.state
+            .sink { state in
+                receivedStates.append(state)
+                if case .loaded = state {
+                    expectation.fulfill()
+                }
+            }
+            .store(in: &disposeBag)
+        
+        // When
+        sut.viewDidLoad()
+        
+        // Then
+        wait(for: [expectation], timeout: 1.0)
+        XCTAssertFalse(receivedStates.contains(where: { if case .empty = $0 { return true }; return false }))
+    }
+    
+    func test_EmptyState_ShouldHaveCorrectMessage() {
+        // Given
+        appRoot = CurrentValueSubject<Roots, Never>(.userList(UserBuilder.buildEmptyUsers()))
+        let sut = UserListViewModel(appRoot: appRoot, users: UserBuilder.buildEmptyUsers())
+        let expectation = expectation(description: "Should show empty state with correct message")
+        
+        sut.state
+            .sink { state in
+                if case .empty = state {
                     expectation.fulfill()
                 }
             }
