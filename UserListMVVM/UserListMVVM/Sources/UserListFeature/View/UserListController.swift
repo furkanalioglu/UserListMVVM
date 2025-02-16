@@ -30,6 +30,7 @@ final class UserListController: NiblessViewController {
         super.viewDidLoad()
         setupNavigationBar()
         subscribe()
+        viewModel.viewDidLoad()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -45,8 +46,6 @@ final class UserListController: NiblessViewController {
     
     private func subscribe() {
         viewModel.destination
-            .dropFirst()
-            .receive(on: DispatchQueue.main)
             .sink { [weak self] destination in
                 guard let self else { return }
                 self.handleDestination(destination)

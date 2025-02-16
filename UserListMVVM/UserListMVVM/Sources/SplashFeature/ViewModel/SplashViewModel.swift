@@ -10,7 +10,13 @@ import Combine
 
 final class SplashViewModel: SplashViewModelProtocol {
     // MARK: - Protocol Properties
-    private(set) var viewState = CurrentValueSubject<SplashViewState, Never>(.initial)
+    private var viewState = CurrentValueSubject<SplashViewState, Never>(.initial)
+    
+    var statePublisher: AnyPublisher<SplashViewState, Never> {
+        viewState
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
+    }
     // MARK: - Private Properties
     private var disposeBag = Set<AnyCancellable>()
     private let appRoot: CurrentValueSubject<Roots, Never>

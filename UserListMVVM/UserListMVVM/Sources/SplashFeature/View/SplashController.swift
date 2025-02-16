@@ -41,8 +41,7 @@ final class SplashController: NiblessViewController {
     }
     
     private func subscribe() {
-        viewModel.viewState
-            .receive(on: DispatchQueue.main)
+        viewModel.statePublisher
             .sink { [weak self] state in
                 self?.handleViewState(state)
             }

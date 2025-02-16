@@ -32,12 +32,18 @@ final class SplashViewModelTests: XCTestCase {
         // Given
         let mockRepository = MockUserRepository()
         let sut = SplashViewModel(appRoot: appRoot, repo: mockRepository)
+        let expectation = expectation(description: "Should emit initial state")
         
         // When
-        // Nothing
+        sut.statePublisher
+            .sink { state in
+                // Then
+                XCTAssertEqual(state, .initial)
+                expectation.fulfill()
+            }
+            .store(in: &disposeBag)
         
-        // Then
-        XCTAssertEqual(sut.viewState.value, .initial)
+        wait(for: [expectation], timeout: 1.0)
     }
     
     func test_WhenFetchUsersSucceeds_ShouldUpdateAppRoot() {
@@ -73,8 +79,7 @@ final class SplashViewModelTests: XCTestCase {
         let sut = SplashViewModel(appRoot: appRoot, repo: mockRepository)
         
         let expectation = expectation(description: "Should show error")
-        sut.viewState
-            .dropFirst() // Skip initial .loading state
+        sut.statePublisher
             .sink { state in
                 if case let .error(message) = state {
                     XCTAssertEqual(message, networkError.errorDescription)
@@ -102,7 +107,7 @@ final class SplashViewModelTests: XCTestCase {
         var stateChanges: [SplashViewState] = []
         let expectation = expectation(description: "Should complete state changes")
         
-        sut.viewState
+        sut.statePublisher
             .sink { state in
                 stateChanges.append(state)
                 if state == .error(networkError.errorDescription ?? "") {
@@ -149,7 +154,7 @@ final class SplashViewModelTests: XCTestCase {
         let expectation = expectation(description: "Should handle multiple retries")
         var retryCount = 0
         
-        sut.viewState
+        sut.statePublisher
             .sink { state in
                 if case .error = state {
                     retryCount += 1
@@ -202,6 +207,7 @@ final class SplashViewModelTests: XCTestCase {
         XCTAssertNil(weakSut, "ViewModel should be deallocated")
     }
     
+    //TODO: - Move TO SEPERATE FILE.
     func test_ViewControllerMemoryLeaks_ShouldNotOccur() {
         // Given
         weak var weakController: SplashController?

@@ -9,11 +9,13 @@ import Foundation
 import Combine
 
 protocol UserListViewModelProtocol {
+    func viewDidLoad()
+    func viewDidAppear()
+    func didSelectRow(at indexPath: IndexPath)
+    
     var users: [User] { get }
     var state: AnyPublisher<UserListViewState, Never> { get }
     var destination: AnyPublisher<UserListDestinations?, Never> { get }
-    func didSelectRow(at indexPath: IndexPath)
-    func viewDidAppear()
 }
 
 enum UserListDestinations {

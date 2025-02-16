@@ -104,8 +104,7 @@ final class SplashRootView: NiblessView {
     }
     
     private func subscribe() {
-        viewModel.viewState
-            .receive(on: DispatchQueue.main)
+        viewModel.statePublisher
             .sink { [weak self] state in
                 debugPrint("state is",state)
                 self?.handleActivityIndicatorState(state)

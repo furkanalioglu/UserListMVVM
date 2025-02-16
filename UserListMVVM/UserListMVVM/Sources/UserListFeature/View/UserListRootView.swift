@@ -67,7 +67,6 @@ final class UserListRootView: NiblessView {
     
     private func setupBindings() {
         viewModel.state
-            .receive(on: DispatchQueue.main)
             .sink { [weak self] state in
                 self?.handleState(state)
             }
