@@ -136,7 +136,38 @@ final class UserListViewModelTests: XCTestCase {
     }
     
     func test_WhenUserSelected_AndDestinationActive_ShouldPreventDoublePush() {
-
+        // Given
+        let mockUsers = UserBuilder.buildMockUsers()
+        appRoot = CurrentValueSubject<Roots, Never>(.userList(mockUsers))
+        let sut = UserListViewModel(appRoot: appRoot, users: mockUsers)
+        
+        let expectation = expectation(description: "Should follow correct navigation pattern")
+        expectation.expectedFulfillmentCount = 2 // Initial nil + first navigation
+        
+        var destinationChanges: [UserListDestinations?] = []
+        sut.destination
+            .sink { destination in
+                destinationChanges.append(destination)
+                expectation.fulfill()
+            }
+            .store(in: &disposeBag)
+        
+        // When
+        sut.viewDidLoad()
+        sut.didSelectRow(at: IndexPath(row: 0, section: 0)) // First navigation
+        sut.didSelectRow(at: IndexPath(row: 1, section: 0)) // Attempt second navigation
+        
+        // Then
+        wait(for: [expectation], timeout: 1.0)
+        
+        XCTAssertEqual(destinationChanges.count, 2, "Should receive initial nil and one navigation")
+        XCTAssertNil(destinationChanges[0], "Initial state should be nil")
+        if case .userDetail(let user) = destinationChanges[1] {
+            XCTAssertEqual(user.id, mockUsers[0].id, "Should keep the first selected user")
+            XCTAssertNotEqual(user.id, mockUsers[1].id, "Should not navigate to second user")
+        } else {
+            XCTFail("Second state should be userDetail")
+        }
     }
     
     // MARK: - Memory Management Tests
