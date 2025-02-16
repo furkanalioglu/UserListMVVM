@@ -59,11 +59,15 @@ final class UserListViewModel: UserListViewModelProtocol {
     }
     
     private func setupInitialState() {
-        let viewModels = users.map { user in
-            UserListTableCellViewModel(
-                user: user
-            )
+        if users.isEmpty == false {
+            let viewModels = users.map { user in
+                UserListTableCellViewModel(
+                    user: user
+                )
+            }
+            stateSubject.send(.loaded(viewModels))
+        }else{
+            stateSubject.send(.empty)
         }
-        stateSubject.send(.loaded(viewModels))
     }
 }

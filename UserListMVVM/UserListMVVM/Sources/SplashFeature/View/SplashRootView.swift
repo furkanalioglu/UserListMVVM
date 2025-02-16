@@ -106,7 +106,6 @@ final class SplashRootView: NiblessView {
     private func subscribe() {
         viewModel.statePublisher
             .sink { [weak self] state in
-                debugPrint("state is",state)
                 self?.handleActivityIndicatorState(state)
             }
             .store(in: &disposeBag)

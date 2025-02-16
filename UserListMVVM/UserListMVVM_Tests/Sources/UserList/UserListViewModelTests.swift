@@ -83,7 +83,6 @@ final class UserListViewModelTests: XCTestCase {
         let expectation = expectation(description: "Should trigger user detail")
         
         sut.destination
-            .dropFirst()
             .sink { destination in
                 if case let .userDetail(selectedUser) = destination {
                     XCTAssertEqual(selectedUser.id, mockUsers[0].id)

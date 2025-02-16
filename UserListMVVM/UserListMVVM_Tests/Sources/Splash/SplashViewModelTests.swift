@@ -22,9 +22,9 @@ final class SplashViewModelTests: XCTestCase {
     }
     
     override func tearDown() {
+        super.tearDown()
         appRoot = nil
         disposeBag = nil
-        super.tearDown()
     }
     
     // MARK: - General Tests

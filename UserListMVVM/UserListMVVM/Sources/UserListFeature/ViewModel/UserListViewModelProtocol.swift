@@ -25,6 +25,7 @@ enum UserListDestinations {
 enum UserListViewState {
     case initial
     case loading
+    case empty
     case loaded([UserListTableCellViewModel])
     case error
 }
